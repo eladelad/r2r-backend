@@ -27,11 +27,9 @@ router.post('/add-question', function(req, res, next) {
         });
 
     } else {
-        res.status(400);
+        console.log('no questions');
+        res.sendStatus(400);
     }
-
-
-
 });
 
 module.exports = router;

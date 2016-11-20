@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var newUser = require('./routes/api/newUser');
 var getQuestion = require('./routes/api/getQuestion');
 var addQuestion = require('./routes/api/addQuestion');
+var answerQuestion = require('./routes/api/answerQuestion');
 
 var mongoose = require('mongoose');
 
@@ -32,7 +33,7 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    res.send(200);
+    res.sendStatus(200);
   }
   else {
     res.header('Access-Control-Allow-Origin', '*');
@@ -49,6 +50,7 @@ app.use('/', routes);
 app.use('/api/', newUser);
 app.use('/api/', getQuestion);
 app.use('/api/', addQuestion);
+app.use('/api/', answerQuestion);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

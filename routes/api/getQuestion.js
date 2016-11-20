@@ -8,58 +8,38 @@ var router = express.Router();
 var validator = require('validator');
 var Question = require('../../models/question.js');
 var User = require('../../models/user.js');
-var findUser = require('./userFunctions').findUser;
+var findUserById = require('./userFunctions').findUserById;
+var getNextQuestion = require('./questionFunctions').getNextQuestion;
+var checkUserTime = require('./userFunctions').checkUserTime;
+
 /* GET home page. */
 router.post('/get-question', function(req, res, next) {
     if (req.body.token){
         var token = req.body.token;
         console.log(token);
-        findUser(token).then(function (user){
-            getNextQuestion(user).then(function(question){
-                if (question){
-                    delete question.correct;
-                    res.json(question);
-                } else {
-                    res.status(404).json({error: 'no questions found'});
-                }
+        findUserById(token).then(function (user){
+            checkUserTime(user).then(function(user){
+                // console.log('found user', user);
+                getNextQuestion(user).then(function(question){
+                    // console.log(question);
+                    if (question){
+                        delete question.question.correct;
+                        res.json(question);
+                    } else {
+                        res.status(404).json({errorCode: 1, errorDesc: 'Out of questions'});
+                    }
+                })
+            }, function(err){
+                // out of time
+                res.status(401).json({errorCode: 2, errorDesc: 'Out of time'})
             });
         }, function (err) {
-            res.status(400).json({error: err});
+            // user wasn't found
+            res.status(400).json({errorCode: 10, errorDesc: err});
         });
+    } else {
+        res.status(400).json({errorCode:11, errorDesc:'No Token'});
     }
 });
-
-var getNextQuestion = function (user) {
-    return new Promise(function (resolve, reject) {
-        console.log('searching questions for user', user);
-        Question.find(function (err, questions) {
-            if (err){
-                console.error('error finding questions');
-                reject(err);
-            } else {
-                console.log('found questions', questions);
-                questions.forEach(function(question){
-                    if (!isAnsweredByUser(user, question.id)) {
-                        console.log('found the right question', user.name, question)
-                        resolve(question);
-                    }
-                });
-                resolve(null);
-            }
-        })
-    })
-
-};
-
-
-
-var isAnsweredByUser = function(user, question_id){
-    user.answers.forEach(function(answer){
-        if (answer.question == question_id){
-            return true
-        }
-    });
-    return false;
-};
 
 module.exports = router;

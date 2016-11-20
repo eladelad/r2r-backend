@@ -10,7 +10,12 @@ var _schema = new Schema({
     inputs: [{
         key : String,
         text : String,
-        type: { type: String }
+        type: { type: String },
+        radios: [{
+            key: String,
+            value: String
+        }
+        ]
     }],
     photo: String,
     correct: String

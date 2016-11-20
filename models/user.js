@@ -9,9 +9,13 @@ var _schema = new Schema({
     mobile: {type: String, index: {unique: true}},
     email: {type: String, index: {unique: true}},
     name: String,
+    created: Date,
+    start_time: Date,
     answers: [{
+        date: Date,
         question: { type: Schema.Types.ObjectId, ref: 'Question' },
-        answer: { type: Schema.Types.ObjectId, ref: 'Category' }
+        answer: { type: Schema.Types.ObjectId },
+        correct: Boolean
     }]
 });
 
