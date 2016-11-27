@@ -4,5 +4,7 @@
 
 
 var minutes = 40;
+var code_minutes = 60;
 
 exports.minutes = minutes;
+exports.code_minutes = code_minutes;

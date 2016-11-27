@@ -11,12 +11,21 @@ var _schema = new Schema({
     name: String,
     created: Date,
     start_time: Date,
+    start_time_code: Date,
     answers: [{
         date: Date,
+        text: String,
+        ip: String,
         question: { type: Schema.Types.ObjectId, ref: 'Question' },
         answer: { type: Schema.Types.ObjectId },
         correct: Boolean
-    }]
+    }],
+    code_answer: {
+        code: { type: Schema.Types.ObjectId, ref: 'Code' },
+        result: String,
+        code_text: String,
+        correct: Boolean
+    }
 });
 
 module.exports = mongoose.model('User', _schema);

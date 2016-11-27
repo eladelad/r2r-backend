@@ -5,6 +5,7 @@
 var Promise = require('promise');
 var User = require('../../models/user.js');
 var Question = require('../../models/question');
+var Code = require('../../models/code');
 var minutes = require('./conf').minutes;
 
 
@@ -51,6 +52,18 @@ var getQuestionById = function (question_id) {
     })
 };
 
+var getCodeById = function (code_id) {
+    return new Promise(function (resolve, reject) {
+        Code.findById(code_id, function (err, code) {
+            if (err || !code){
+                reject(err || 'no question found');
+            } else {
+                resolve(code);
+            }
+        })
+    })
+};
+
 var isAnsweredByUser = function(user, question){
     var answered = false;
     user.answers.forEach(function(answer){
@@ -63,5 +76,23 @@ var isAnsweredByUser = function(user, question){
     return answered
 };
 
+var getCode = function (user) {
+    return new Promise(function(resolve, reject){
+        Code.find(function(err, codes){
+            if (err){
+                console.log(err)
+            } else {
+                codes.forEach(function(code){
+                    var code = { description: code.description, id: code.id }
+                    resolve(code);
+                });
+            }
+        })
+
+    })
+};
+
+exports.getCodeById = getCodeById;
+exports.getCode = getCode;
 exports.getNextQuestion = getNextQuestion;
 exports.getQuestionById = getQuestionById;
